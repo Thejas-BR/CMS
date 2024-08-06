@@ -179,7 +179,16 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
+#OTP Verification model:
+class OTP(models.Model):
+    phone_number = models.CharField(max_length=15)
+    otp = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.phone_number} - {self.otp}'
 
 
 class SessionYearModel(models.Model):
@@ -195,15 +204,19 @@ class CustomUser(AbstractUser):
     HOD = '1'
     STAFF = '2'
     STUDENT = '3'
+    NAAC = '4'#
     
     EMAIL_TO_USER_TYPE_MAP = {
         'hod': HOD,
         'staff': STAFF,
-        'student': STUDENT
+        'student': STUDENT,
+        'naac' : NAAC #
     }
 
-    user_type_data = ((HOD, "HOD"), (STAFF, "Staff"), (STUDENT, "Student"))
+    user_type_data = ((HOD, "HOD"), (STAFF, "Staff"), (STUDENT, "Student"),(NAAC,"naac")) #
     user_type = models.CharField(default=1, choices=user_type_data, max_length=10)
+    mobile = models.CharField(max_length=15, default='1234567890')
+    role = models.CharField(max_length=50, blank=True, null=True)
 
 
 class AdminHOD(models.Model):
@@ -213,6 +226,14 @@ class AdminHOD(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
 
+#Am creating a NAAC model here
+
+class NAAC(models.Model):
+    id = models.AutoField(primary_key=True)
+    naac_admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    objects = models.Manager()
 
 class Staffs(models.Model):
     id = models.AutoField(primary_key=True)
@@ -221,8 +242,36 @@ class Staffs(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
+#Form Builder
+class Form(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField(blank=True)
 
+    def __str__(self):
+        return self.name
 
+class Field(models.Model):
+    FIELD_TYPES = [
+        ('text', 'Text'),
+        ('textarea', 'Textarea'),
+        ('number', 'Number'),
+        ('date', 'Date'),
+        ('email', 'Email'),
+    ]
+
+    form = models.ForeignKey(Form, related_name='fields', on_delete=models.CASCADE)
+    label = models.CharField(max_length=100)
+    field_type = models.CharField(max_length=20, choices=FIELD_TYPES)
+    required = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"{self.label} ({self.get_field_type_display()})"
+    
+
+#File upload
+class UploadedFile(models.Model):
+    file = models.FileField(upload_to='uploads/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
 class Courses(models.Model):
     id = models.AutoField(primary_key=True)
@@ -234,7 +283,27 @@ class Courses(models.Model):
     # def __str__(self):
 	#     return self.course_name
 
+#Bulk Upload
+class StudentAdmission(models.Model):
+    name = models.CharField(max_length=100)
+    mobile = models.CharField(max_length=15)
+    email = models.EmailField(blank=True)
+    role = models.CharField(max_length=15)
+    #course = models.CharField(max_length=50)
+    #academic_year = models.CharField(max_length=9)
 
+    def __str__(self):
+        return self.name
+
+#Announcements:
+class Announcement(models.Model):
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+    is_new = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
 
 class Subjects(models.Model):
     id =models.AutoField(primary_key=True)
@@ -249,10 +318,11 @@ class Subjects(models.Model):
 
 class Students(models.Model):
     id = models.AutoField(primary_key=True)
-    admin = models.OneToOneField(CustomUser, on_delete = models.CASCADE)
+    admin = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     gender = models.CharField(max_length=50)
     profile_pic = models.FileField()
     address = models.TextField()
+    mobile = models.CharField(max_length=15,default = 9876543210)  # Add this line for mobile number
     course_id = models.ForeignKey(Courses, on_delete=models.DO_NOTHING, default=1)
     session_year_id = models.ForeignKey(SessionYearModel, null=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

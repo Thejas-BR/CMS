@@ -1,0 +1,166 @@
+{% load static %}
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+      <!-- Brand Logo -->
+      <a href="{% url 'student_home' %}" class="brand-link">
+        <img src="{% static 'dist/img/jecrc_logo.png' %}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3 ml-5"
+            style="opacity: .8">
+        <span class="brand-text font-weight-light">NAAC</span>
+      </a>
+
+      <!-- Sidebar -->
+
+
+      <div class="sidebar">
+        <!-- Sidebar user panel (optional) -->
+        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+          <div class="image">
+            <img src="{% static 'dist/img/logo.png' %}" class="img-circle elevation-2 ml-5" alt="User Image" style="max-width:100%;">
+          </div>
+          <div class="info">
+            <a href="{% url 'student_profile' %}" class="d-block">{{ user.first_name }} {{ user.last_name }}</a>
+          </div>
+        </div>
+
+        <!-- Sidebar Menu -->
+        <nav class="mt-2">
+          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <!-- Add icons to the links using the .nav-icon class
+                with font-awesome or any other icon font library -->
+
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Home
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'test' as test %}
+              <a href="{{ test }}" class="nav-link {% if request.path == test %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Home2
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'curriculum' as curriculum %}
+              <a href="{{ curriculum }}" class="nav-link {% if request.path == curriculum %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  Curricular Aspects
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  2.
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  3.
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  4.
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  5.
+                </p>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-tachometer-alt"></i>
+                <p>
+                  6.
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              {% url 'announcements' as announcements %}
+              <a id="announcement-icon" href="{{ announcements }}" class="nav-link {% if request.path == announcements %} active {% endif %}">
+                <i class="nav-icon fas fa-bell"></i>
+                <p>
+                  Announcements
+                </p>
+              </a>
+            </li>
+            <style>
+              .new-announcement {
+                  color: red;
+              }
+            </style>
+            <li class="nav-item">
+              {% url 'add_announcements' as add_announcements %}
+              <a href="{{ add_announcements }}" class="nav-link {% if request.path == add_announcements %} active {% endif %}">
+                <i class="nav-icon fas fa-plus-circle"></i>
+                <p>
+                  Add Announcement
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-plus-circle"></i>
+                <p>
+                  Feedback
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-plus-circle"></i>
+                <p>
+                  View Attendance
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              {% url 'naac_home' as naac_home %}
+              <a href="{{ naac_home }}" class="nav-link {% if request.path == naac_home %} active {% endif %}">
+                <i class="nav-icon fas fa-plus-circle"></i>
+                <p>
+                  View Marks
+                </p>
+              </a>
+            </li>
+
+          </ul>
+        </nav>
+        <!-- /.sidebar-menu -->
+      </div>
+      <!-- /.sidebar -->
+    </aside>

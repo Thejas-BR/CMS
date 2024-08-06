@@ -1,14 +1,49 @@
 from django import forms
-from .models import Courses, SessionYearModel
+from .models import Courses, SessionYearModel,UploadedFile
+from .models import Announcement
+
+#OTP Verification form
+from django.core.validators import RegexValidator
+
+class PhoneNumberForm(forms.Form):
+        mobile = forms.CharField(
+        max_length=16,
+        validators=[RegexValidator(r'^\+?91\d{10}$', 'Enter a valid phone number.')]
+    )
+
+class OTPForm(forms.Form):
+    otp = forms.CharField(max_length=6)
+
+#class PasswordForm(forms.Form):
+ #   password = forms.CharField(widget=forms.PasswordInput, max_length=128)
+
+
+
+#File upload:
+class UploadFileForm(forms.ModelForm):
+    class Meta:
+        model = UploadedFile
+        fields = ['file']
 
 
 class DateInput(forms.DateInput):
     input_type = "date"
 
+#Bulk upload:
+class UploadFileForm(forms.Form):
+    file = forms.FileField()
+
+#Add Announcements:
+
+class AnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = Announcement
+        fields = ['title', 'content', 'is_new']
 
 class AddStudentForm(forms.Form):
     email = forms.EmailField(label="Email", max_length=50, widget=forms.EmailInput(attrs={"class":"form-control"}))
     password = forms.CharField(label="Password", max_length=50, widget=forms.PasswordInput(attrs={"class":"form-control"}))
+    mobile = forms.CharField(label="mobile", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     first_name = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     last_name = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
@@ -55,6 +90,7 @@ class EditStudentForm(forms.Form):
     first_name = forms.CharField(label="First Name", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     last_name = forms.CharField(label="Last Name", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
     username = forms.CharField(label="Username", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
+    mobile = forms.CharField(label="mobile", max_length=15, widget=forms.TextInput(attrs={"class":"form-control"}))
     address = forms.CharField(label="Address", max_length=50, widget=forms.TextInput(attrs={"class":"form-control"}))
 
     #For Displaying Courses
@@ -90,3 +126,4 @@ class EditStudentForm(forms.Form):
     # session_start_year = forms.DateField(label="Session Start", widget=DateInput(attrs={"class":"form-control"}))
     # session_end_year = forms.DateField(label="Session End", widget=DateInput(attrs={"class":"form-control"}))
     profile_pic = forms.FileField(label="Profile Pic", required=False, widget=forms.FileInput(attrs={"class":"form-control"}))
+

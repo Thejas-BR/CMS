@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from . import views
-from .import HodViews, StaffViews, StudentViews
+from .import HodViews, StaffViews, StudentViews, naacViews
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -12,6 +12,10 @@ urlpatterns = [
     path('registration', views.registration, name="registration"),
     path('doLogin', views.doLogin, name="doLogin"),
     path('doRegistration', views.doRegistration, name="doRegistration"),
+    path('send-otp/', views.send_otp_view, name='send_otp_view'),
+    path('verify-otp/', views.verify_otp_view, name='verify_otp_view'),
+    
+    
     
       # URLS for Student
     path('student_home/', StudentViews.student_home, name="student_home"),
@@ -93,7 +97,32 @@ urlpatterns = [
     path('admin_get_attendance_student/', HodViews.admin_get_attendance_student, name="admin_get_attendance_student"),
     path('admin_profile/', HodViews.admin_profile, name="admin_profile"),
     path('admin_profile_update/', HodViews.admin_profile_update, name="admin_profile_update"),
+
+    path('naac_home/', naacViews.naac_home, name="naac_home"),
+    #test
+    path('test/',naacViews.test,name = "test"),
+    path('curriculum/',naacViews.curriculum,name = "curriculum"),
+    path('announcements/',naacViews.announcements,name = "announcements"),
+    path('add_announcements/', naacViews.add_announcements, name="add_announcements"),
+    path('ss1_1/', naacViews.ss1_1, name='ss1_1'),
+    path('ss1_2/', naacViews.ss1_2, name='ss1_2'),
+    path('ss1_3/', naacViews.ss1_3, name='ss1_3'),
+
+    #Form Builder
+    path('create_form/', naacViews.create_form, name='create_form'),
+    path('form_list/', naacViews.form_list, name='form_list'),
+    path('<int:form_id>/', naacViews.display_form, name='display_form'),
     
+    #File upload
+    path('upload/', naacViews.upload_file, name='upload'),  # Set the default route to upload_file view
+    path('upload/success/', naacViews.upload_success, name='upload_success'),
+    path('files/', naacViews.file_list, name='file_list'), 
+
+    #Bulk upload
+    path('download-template/', naacViews.download_excel_template, name='download_template'),
+    path('upload_bulk/', naacViews.upload_excel_file, name='upload_excel'),
+    path('students/', naacViews.list_students, name='student_list'),
+
 
 ]
 

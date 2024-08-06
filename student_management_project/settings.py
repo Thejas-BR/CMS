@@ -140,7 +140,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Twilio settings
+TWILIO_ACCOUNT_SID = 'AC3feedcaf5aa88fa367b40f002be03cc0'
+TWILIO_AUTH_TOKEN = 'd9a4bc1455ca10b64f24a03014acd4bb'
+TWILIO_VERIFY_SID = 'VA755f211545e0aab6276c8b172f94c503'
+TWILIO_PHONE_NUMBER = '+919480184764'  # Your Twilio phone number
 #
 #
 # # Registering Custom Backend "EmailBackEnd"

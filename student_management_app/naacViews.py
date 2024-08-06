@@ -1,18 +1,29 @@
+# Create functions based on the credentials of NAAC and inherit the templates from other
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib import messages
 from django.core.files.storage import FileSystemStorage #To upload Profile Picture
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from .forms import UploadFileForm
+from .models import UploadedFile
+from .models import Announcement
+from .forms import AnnouncementForm
 import json
 
 from .forms import AddStudentForm, EditStudentForm
 
-from .models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport
+from .models import CustomUser, Staffs, Courses, Subjects, Students, SessionYearModel, FeedBackStudent, FeedBackStaffs, LeaveReportStudent, LeaveReportStaff, Attendance, AttendanceReport, Form, Field
 
+import pandas as pd
+from .models import StudentAdmission
 
-def admin_home(request):
-    print("apun sbka baap h")
+def naac_home(request):
+    print("Welcome to NAAC dashboard")
+    #return HttpResponse("Welcome to NAAC dashboard")
     print(request.user.user_type)
     all_student_count = Students.objects.all().count()
     subject_count = Subjects.objects.all().count()
@@ -87,12 +98,132 @@ def admin_home(request):
         "student_attendance_leave_list": student_attendance_leave_list,
         "student_name_list": student_name_list,
     }
-    return render(request, "hod_template/home_content.html", context)
+    return render(request, "naac_template/home_content.html", context)
+
+
+def curriculum(request):
+    return render(request,"naac_template/1/curriculum.html")
+
+def test(request):
+    return render(request,"naac_template/test.html")
+
+#Form builder
+def form_list(request):
+    forms = Form.objects.all()
+    return render(request, 'form_builder_template/form_list.html',{'forms': forms})
+
+def display_form(request, form_id):
+    form = Form.objects.get(id=form_id)
+    return render(request, 'form_builder_template/display_form.html', {'form': form})
+
+def ss1_1(request):
+    return render(request, "naac_template/1/ss1_1.html")
+
+def ss1_2(request):
+    return render(request, "naac_template/1/ss1_2.html")
+
+def ss1_3(request):
+    return render(request, "naac_template/1/ss1_3.html")
+
+def create_form(request):
+    if request.method == 'POST':
+        form_name = request.POST.get('form_name')
+        form_description = request.POST.get('form_description')
+        new_form = Form.objects.create(name=form_name, description=form_description)
+        
+        for key, value in request.POST.items():
+            if key.startswith('field_label_'):
+                index = key.split('_')[-1]
+                label = value
+                field_type = request.POST.get(f'field_type_{index}')
+                required = request.POST.get(f'field_required_{index}', 'off') == 'on'
+                Field.objects.create(form=new_form, label=label, field_type=field_type, required=required)
+        
+        return redirect('form_list')
+    
+    return render(request, "form_builder_template/create_form.html")
+
+#File upload:
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('upload_success')
+    else:
+        form = UploadFileForm()
+    return render(request, 'file_upload_template/upload.html', {'form': form})
+
+def upload_success(request):
+    return render(request, 'file_upload_template/upload_success.html')
+
+def file_list(request):
+    files = UploadedFile.objects.all()
+    return render(request, 'file_upload_template/file_list.html', {'files': files})
+
+#Bulk upload
+def download_excel_template(request):
+    # Create a DataFrame with the headers for the Excel file
+    df = pd.DataFrame(columns=['Name', 'Mobile', 'email', 'role'])
+
+    # Save the DataFrame to an Excel file in memory
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=student_template.xlsx'
+    df.to_excel(response, index=False)
+
+    return response
+
+def upload_excel_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            # Read the uploaded file into a DataFrame
+            excel_file = request.FILES['file']
+            df = pd.read_excel(excel_file)
+
+            # Iterate through the DataFrame and create Student objects
+            for _, row in df.iterrows():
+                StudentAdmission.objects.create(
+                    name=row['Name'],
+                    mobile=row['Mobile'],
+                    email = row['email'],
+                    role = row['role'],
+                    #course=row['Course'],
+                    #academic_year=row['Academic Year']
+                )
+            messages.success(request, "Data uploaded successfully!")
+    else:
+        form = UploadFileForm()
+
+    return render(request, 'bulk/upload_bulk.html', {'form': form})
+
+def list_students(request):
+    students = StudentAdmission.objects.all()
+    return render(request, 'bulk/students.html', {'students': students})
+
+#Announcements:
+def announcements(request):
+    announcements_list = Announcement.objects.all().order_by('-created_at')
+    context = {
+        'announcements': announcements_list,
+    }
+    return render(request, "naac_template/announcements.html", context)
+
+def add_announcements(request):
+    if request.method == 'POST':
+        form = AnnouncementForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('announcements')
+    else:
+        form = AnnouncementForm()
+    return render(request, 'naac_template/add_announcements.html', {'form': form})
+
 
 
 def add_staff(request):
     return render(request, "hod_template/add_staff_template.html")
-
 
 def add_staff_save(request):
     if request.method != "POST":
@@ -343,7 +474,6 @@ def add_student_save(request):
             first_name = form.cleaned_data['first_name']
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
-            mobile = form.cleaned_data['mobile']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             address = form.cleaned_data['address']
@@ -792,6 +922,3 @@ def staff_profile(request):
 
 def student_profile(requtest):
     pass
-
-
-

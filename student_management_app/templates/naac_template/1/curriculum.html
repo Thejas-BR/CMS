@@ -1,0 +1,110 @@
+<!-- templates/Curriculum.html -->
+
+{% extends 'naac_template/base1.html' %}
+
+{% block page_title %}
+   <h1><u>Curricular Aspects</u></h1>
+{% endblock page_title %}
+
+{%load static%}
+
+{% block main_content %}
+
+<section class="content">
+    <div class="container">
+        <!-- Main Categories -->
+        <div id="accordion">
+            <!-- 1.1 Category -->
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            1.1 Curriculum Planning
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        <ul>
+                            <!--<li><a href="" id="subsection1-1-1">1.1.1</a></li>-->
+                            <li class="nav-item">
+                                {% url 'ss1_1' as ss1_1 %}
+                                <a href="{{ ss1_1 }}" class="nav-link {% if request.path == ss1_1 %} active {% endif %}">1.1.1</a>
+                            </li>
+                            <li class="nav-item">
+                                {% url 'ss1_2' as ss1_2 %}
+                                <a href="{{ ss1_2 }}" class="nav-link {% if request.path == ss1_2 %} active {% endif %}">1.1.2</a>
+                            </li>
+                            <li class="nav-item">
+                                {% url 'ss1_3' as ss1_3 %}
+                                <a href="{{ ss1_3 }}" class="nav-link {% if request.path == ss1_3 %} active {% endif %}">1.1.3</a>
+                            </li>
+
+                            <!--<li><a href="#" id="subsection1-1-2">1.1.2</a></li>
+                            <li><a href="#" id="subsection1-3-2">1.1.3</a></li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 1.2 Category -->
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            1.2 Academic Flexibility
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        <ul>
+                            <li><a href="#" id="subsection1-2-1">1.2.1</a></li>
+                            <li><a href="#" id="subsection1-2-2">1.2.2</a></li>
+                            <li><a href="#" id="subsection1-3-2">1.2.3</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 1.3 Category -->
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            1.3 Curriculum Enrichment
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                        <ul>
+                            <li><a href="#" id="subsection1-3-1">1.3.1</a></li>
+                            <li><a href="#" id="subsection1-3-2">1.3.2</a></li>
+                            <li><a href="#" id="subsection1-3-2">1.3.3</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 1.4 Category -->
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                            1.4 Feedback System
+                        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                    <div class="card-body">
+                        <ul>
+                            <li><a href="#" id="subsection1-4-1">1.4.1</a></li>
+                            <li><a href="#" id="subsection1-4-2">1.4.2</a></li>
+                            <li><a href="#" id="subsection1-3-2">1.4.3</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock main_content %}
